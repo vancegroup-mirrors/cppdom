@@ -35,7 +35,9 @@ def GetPlatform():
    elif string.find(sys.platform, 'linux') != -1:
       return 'linux'
    elif string.find(sys.platform, 'freebsd') != -1:
-      return 'linux'
+      return 'freebsd'
+   elif string.find(sys.platform, 'darwin') != -1:
+      return 'darwin'
    elif string.find(sys.platform, 'cygwin') != -1:
       return 'win32'
    elif string.find(os.name, 'win32') != -1:
@@ -74,10 +76,38 @@ def BuildLinuxEnvironment():
    "Builds a base environment for other modules to build on set up for linux"
    global optimize, profile, builders
 
-   CXX = os.path.basename(WhereIs('g++3') or 'g++')
+   CXX = os.path.basename(WhereIs('g++'))
    LINK = CXX
    CXXFLAGS = ['-Wall']
    LINKFLAGS = []
+
+   # Enable profiling?
+   if profile != 'no':
+      CXXFLAGS.extend(['-pg'])
+      LINKFLAGS.extend(['-pg'])
+
+   # Debug or optimize build?
+   if optimize != 'no':
+      CXXFLAGS.extend(['-DNDEBUG', '-O2'])
+   else:
+      CXXFLAGS.extend(['-D_DEBUG', '-g'])
+
+   return Environment(
+      ENV         = os.environ,
+      CXX         = CXX,
+      CXXFLAGS    = CXXFLAGS,
+      LINK        = LINK,
+      LINKFLAGS   = LINKFLAGS
+   )
+
+def BuildDarwinEnvironment():
+   "Builds a base environment for other modules to build on set up for Darwin"
+   global optimize, profile, builders
+
+   CXX = os.path.basename(WhereIs('g++') or 'g++3')
+   LINK = CXX
+   CXXFLAGS = ['-Wall']
+   LINKFLAGS = ['-dynamiclib']
 
    # Enable profiling?
    if profile != 'no':
@@ -200,7 +230,7 @@ Export('SetupCppUnit')
 #------------------------------------------------------------------------------
 # Grok the arguments to this build
 #------------------------------------------------------------------------------
-EnsureSConsVersion(0,11)
+EnsureSConsVersion(0,94)
 
 # Figure out what vesion of CppDom we're using
 CPPDOM_VERSION = GetCppDomVersion()
@@ -219,8 +249,10 @@ builders = {
 # Create and export the base environment
 if GetPlatform() == 'irix':
    baseEnv = BuildIRIXEnvironment()
-elif GetPlatform() == 'linux':
+elif GetPlatform() == 'linux' or GetPlatform() == 'freebsd':
    baseEnv = BuildLinuxEnvironment()
+elif GetPlatform() == 'darwin':
+   baseEnv = BuildDarwinEnvironment()
 elif GetPlatform() == 'win32':
    baseEnv = BuildWin32Environment()
 elif GetPlatform() == 'sun':
@@ -264,25 +296,6 @@ Help(help_text)
 PREFIX = baseEnv['prefix']
 PREFIX = os.path.abspath(PREFIX)
 Export('PREFIX')
-
-tar_sources = Split("""
-		AUTHORS
-		ChangeLog
-		COPYING
-		README
-		cppdom-config.in
-		SConstruct
-		doc/cppdom.doxy
-		doc/dox/examples_index.dox
-		doc/dox/mainpage.dox
-		tools/build/AutoDist.py
-		vc7/cppdom.sln
-		vc7/cppdom.vcproj
-		cppdom/
-		test/
-""")
-baseEnv.Append(TARFLAGS = '-z',)
-baseEnv.Tar('cppdom-' + '%i.%i.%i' % CPPDOM_VERSION + '.tar.gz', tar_sources)
 
 # Build in a build directory
 buildDir = "build." + GetPlatform()
