@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 0.3.3 released - 11.11.2004]==========================================
+2004-09-11 patrickh     Fixed the build on Mac OS X.
+
 [Version 0.3.2 released - 4.11.2004]===========================================
 2004-04-11 patrickh     The library binaries each have unique names on Win32.
                         NEW VERSION: 0.3.2
