@@ -1,6 +1,9 @@
 Import('baseEnv')
 Import('GetPlatform SetupCppUnit')
 
+import os
+pj = os.path.join
+
 sources = Split("""
    runner
    ErrorTest
@@ -9,12 +12,12 @@ sources = map(lambda n: n + '.cpp', sources)
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = Split('#'),
-           LIBPATH = ['#cppdom'],
+           LIBPATH = [pj('#', 'build.' + GetPlatform(), 'cppdom')],
            LIBS    = ['cppdom'])
 SetupCppUnit(env)
 
 # Win32 doesn't have libdl
-if GetPlatform() != 'win32':
+if GetPlatform() != 'win32' and GetPlatform() != 'freebsd':
    env.Append(LIBS = Split('dl'))
 
 if GetPlatform() == 'linux':
