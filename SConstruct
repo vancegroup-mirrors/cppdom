@@ -200,7 +200,7 @@ Export('SetupCppUnit')
 #------------------------------------------------------------------------------
 # Grok the arguments to this build
 #------------------------------------------------------------------------------
-EnsureSConsVersion(0,11)
+EnsureSConsVersion(0,94)
 
 # Figure out what vesion of CppDom we're using
 CPPDOM_VERSION = GetCppDomVersion()
@@ -219,7 +219,7 @@ builders = {
 # Create and export the base environment
 if GetPlatform() == 'irix':
    baseEnv = BuildIRIXEnvironment()
-elif GetPlatform() == 'linux':
+elif GetPlatform() == 'linux' or GetPlatform() == 'freebsd':
    baseEnv = BuildLinuxEnvironment()
 elif GetPlatform() == 'win32':
    baseEnv = BuildWin32Environment()
@@ -264,25 +264,6 @@ Help(help_text)
 PREFIX = baseEnv['prefix']
 PREFIX = os.path.abspath(PREFIX)
 Export('PREFIX')
-
-tar_sources = Split("""
-		AUTHORS
-		ChangeLog
-		COPYING
-		README
-		cppdom-config.in
-		SConstruct
-		doc/cppdom.doxy
-		doc/dox/examples_index.dox
-		doc/dox/mainpage.dox
-		tools/build/AutoDist.py
-		vc7/cppdom.sln
-		vc7/cppdom.vcproj
-		cppdom/
-		test/
-""")
-baseEnv.Append(TARFLAGS = '-z',)
-baseEnv.Tar('cppdom-' + '%i.%i.%i' % CPPDOM_VERSION + '.tar.gz', tar_sources)
 
 # Build in a build directory
 buildDir = "build." + GetPlatform()
