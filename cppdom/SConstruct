@@ -1,0 +1,54 @@
+# build with 'scons'
+# see doc/build.txt
+
+import sys
+import os
+import string
+
+from os import path
+
+Default('.')        # build everything by default
+
+classes = [
+   'xmlparser',
+   'xmlpp',
+   'xmltokenizer',
+]
+
+sources = []
+
+headers = [
+   'shared_ptr.h',
+]
+
+sources.extend(map(lambda n: n + '.cpp', classes))
+headers.extend(map(lambda n: n + '.h',   classes))
+
+# debug or release build?
+CXXFLAGS = ['-Wall']
+if ARGUMENTS.get('debug'):
+   CXXFLAGS.append('-g')
+
+# get install prefix for install target
+PREFIX = '/usr/local'
+if ARGUMENTS.get('prefix'):
+   PREFIX = ARGUMENTS['prefix']
+Export('PREFIX')
+
+# create the base environment
+env = Environment(LIBPATH = '#',
+                  CPPPATH = ['#'],
+                  ENV = os.environ,
+                  CXXFLAGS = CXXFLAGS)
+
+# libraries we wish to install
+libraries = []
+libraries.append(env.Library(target = 'xmlpp', source = sources))
+
+for h in headers:
+   env.Install(path.join(PREFIX, 'include', 'xmlpp'), h)
+
+env.Install(path.join(PREFIX, 'lib'), libraries)
+
+# install target
+env.Alias('install', PREFIX)
