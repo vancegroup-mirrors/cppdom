@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 0.3.2 released - 4.11.2004]===========================================
+2004-04-11 patrickh     The library binaries each have unique names on Win32.
+                        NEW VERSION: 0.3.2
+
 [Version 0.3.1 released - 3.5.2004]============================================
 2004-03-05 aronb        Work around a debug/optimized binary incompatibility
                         within cppdom::Node.
