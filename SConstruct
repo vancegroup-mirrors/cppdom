@@ -35,7 +35,7 @@ def GetPlatform():
    elif string.find(sys.platform, 'linux') != -1:
       return 'linux'
    elif string.find(sys.platform, 'freebsd') != -1:
-      return 'linux'
+      return 'freebsd'
    elif string.find(sys.platform, 'darwin') != -1:
       return 'darwin'
    elif string.find(sys.platform, 'cygwin') != -1:
