@@ -265,25 +265,6 @@ PREFIX = baseEnv['prefix']
 PREFIX = os.path.abspath(PREFIX)
 Export('PREFIX')
 
-tar_sources = Split("""
-		AUTHORS
-		ChangeLog
-		COPYING
-		README
-		cppdom-config.in
-		SConstruct
-		doc/cppdom.doxy
-		doc/dox/examples_index.dox
-		doc/dox/mainpage.dox
-		tools/build/AutoDist.py
-		vc7/cppdom.sln
-		vc7/cppdom.vcproj
-		cppdom/
-		test/
-""")
-baseEnv.Append(TARFLAGS = '-z',)
-baseEnv.Tar('cppdom-' + '%i.%i.%i' % CPPDOM_VERSION + '.tar.gz', tar_sources)
-
 # Build in a build directory
 buildDir = "build." + GetPlatform()
 BuildDir(pj(buildDir, 'test'), 'test', duplicate=0)
