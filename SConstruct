@@ -104,7 +104,7 @@ def BuildDarwinEnvironment():
    "Builds a base environment for other modules to build on set up for Darwin"
    global optimize, profile, builders
 
-   CXX = os.path.basename(WhereIs('g++3') or 'g++')
+   CXX = os.path.basename(WhereIs('g++') or 'g++3')
    LINK = CXX
    CXXFLAGS = ['-Wall']
    LINKFLAGS = ['-dynamiclib']
