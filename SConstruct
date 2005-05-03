@@ -107,7 +107,7 @@ def BuildDarwinEnvironment():
    CXX = os.path.basename(WhereIs('g++') or 'g++3')
    LINK = CXX
    CXXFLAGS = ['-Wall']
-   LINKFLAGS = ['-dynamiclib']
+   LINKFLAGS = ['']
 
    # Enable profiling?
    if profile != 'no':
