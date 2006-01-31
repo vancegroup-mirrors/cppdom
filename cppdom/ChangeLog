@@ -1,6 +1,9 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
-NOTE: Odd numbered minor versions are development series (ex: 0.1, 0.9, etc)
+[Version 0.6.1 released - 1.13.2006]===========================================
+2005-12-04 patrickh     Fix build failure with GCC 4.1.
+2005-12-04 patrickh     Output the document type before any processing
+                        instructions.
 
 [Version 0.6.0 released - 6.1.2005]============================================
 2005-02-06 allenb       Added hasOption() method to OptionRepository
