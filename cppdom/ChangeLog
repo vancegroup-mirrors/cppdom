@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 0.6.3 released - 4.12.2006]===========================================
+2006-04-12 patrickh     Fixed the use of 'cppdom-config --basedir' with a
+                        64-bit build.
+
 [Version 0.6.2 released - 4.12.2006]===========================================
 2006-04-12 patrickh     Build system enhancements and RPM spec file fix.
 
