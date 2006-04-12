@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 0.6.2 released - 4.12.2006]===========================================
+2006-04-12 patrickh     Build system enhancements and RPM spec file fix.
+
 [Version 0.6.1 released - 1.13.2006]===========================================
 2005-12-04 patrickh     Fix build failure with GCC 4.1.
 2005-12-04 patrickh     Output the document type before any processing
