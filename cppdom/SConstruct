@@ -115,7 +115,7 @@ def BuildLinuxEnvironment():
 
 def BuildDarwinEnvironment():
    "Builds a base environment for other modules to build on set up for Darwin"
-   global optimize, profile, builders
+   global optimize, profile, builders, cpu_arch_default, universal
 
    env = Environment(ENV = os.environ)
 
@@ -135,6 +135,28 @@ def BuildDarwinEnvironment():
       env.Append(CXXFLAGS = ['-DNDEBUG', '-O2'])
    else:
       env.Append(CXXFLAGS = ['-D_DEBUG', '-g'])
+
+   if universal != 'yes':
+      if cpu_arch != cpu_arch_default:
+         if cpu_arch == 'ia32':
+            env.Append(CXXFLAGS = ['-arch', 'i386'],
+                       LINKFLAGS = ['-arch', 'i386'])
+         elif cpu_arch == 'ppc':
+            env.Append(CXXFLAGS = ['-arch', 'ppc'],
+                       LINKFLAGS = ['-arch', 'ppc'])
+   else:
+      env.Append(CXXFLAGS = ['-arch', 'ppc', '-arch', 'i386'],
+                 LINKFLAGS = ['-arch', 'ppc', '-arch', 'i386'])
+
+   if sdk != '':
+      env.Append(CXXFLAGS = ['-isysroot', sdk],
+                 LINKFLAGS = ['-isysroot', sdk])
+
+      sdk_re = re.compile('MacOSX(10\..*?)u?\.sdk')
+      match = sdk_re.search(sdk)
+      if match is not None:
+         min_osx_ver = '-mmacosx-version-min=' + match.group(1)
+         env.Append(CXXFLAGS = [min_osx_ver], LINKFLAGS = [min_osx_ver])
 
    return env
 
@@ -264,8 +286,13 @@ else:
    print "WARNING: Unknown CPU architecture from", platform
    cpu_arch_default = 'unknown'
 
+universal_default = 'yes'
+sdk_default = ''
+
 cpu_arch = ARGUMENTS.get('arch', cpu_arch_default)
-Export('cpu_arch')
+universal = ARGUMENTS.get('universal', universal_default)
+sdk = ARGUMENTS.get('sdk', sdk_default)
+Export('cpu_arch', 'universal', 'sdk')
 
 # Create the extra builders
 # Define a builder for the cppdom-config script
@@ -307,8 +334,10 @@ opts.Add('libdir', 'Library installation directory under <prefix>')
 opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If true, make the distribution packages as part of the build', 'no')
-opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
-         cpu_arch_default)
+opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)', cpu_arch_default)
+opts.Add('universal', 'Build universal binaries (Mac OS X only)',
+         universal_default)
+opts.Add('sdk', 'Platform SDK (Mac OS X only)', sdk_default)
 Export('opts', 'cppunit_options', 'boost_options')
   
 help_text = """--- CppDom Build system ---
@@ -356,7 +385,9 @@ if not SConsAddons.Util.hasHelpFlag():
 
    build_test = baseEnv['build_test']
 
-   if cpu_arch != cpu_arch_default:
+   if GetPlatform() == 'mac' and universal == 'yes':
+      buildDir = "build.%s-universal" % platform
+   elif cpu_arch != cpu_arch_default:
       buildDir = "build.%s-%s" % (platform, cpu_arch)
    else:
       buildDir = "build." + platform
