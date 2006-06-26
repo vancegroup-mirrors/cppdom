@@ -435,3 +435,5 @@ if not SConsAddons.Util.hasHelpFlag():
 
       env.Depends('cppdom-config', 'cppdom/version.h')
       env.Install(inst_paths['bin'], cppdom_config)
+
+   env.Alias('install', inst_paths['base'])
