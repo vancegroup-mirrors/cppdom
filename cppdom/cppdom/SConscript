@@ -32,6 +32,8 @@ if boost_options.isAvailable():
 cppdom_lib_env = baseEnv.Copy()
 cppdom_lib_env.Append(CPPPATH = [inst_paths['include'],])
 
+if GetPlatform() == 'mac':
+   cppdom_lib_env.Append(LINKFLAGS = ['-install_name', 'libcppdom.dylib'])
 
 # If should not do static only, then create static and shared libraries
 if baseEnv['StaticOnly'] == "no":
