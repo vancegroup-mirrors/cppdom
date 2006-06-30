@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 0.6.4 released - 6.30.2006]===========================================
 2006-06-26 patrickh     Refactored the build system to remove AutoDist.
 2006-06-24 patrickh     Support building universal binaries on Mac OS X.
 2006-06-13 allenb       Fixed bug in how NodePtr and DocumentPtr types were
