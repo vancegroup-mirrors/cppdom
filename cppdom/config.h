@@ -47,7 +47,7 @@
 
 // -----------------------------------
 // win32 configuration
-#ifdef WIN32
+#if defined(WIN32) || defined(WIN64)
 
 // switch some warnings off
 #  pragma warning( disable: 4786 4275 4251 )
@@ -59,7 +59,29 @@
 #  else
 #     define CPPDOM_EXPORT(ret)  __declspec(dllimport) ret __stdcall
 #     define CPPDOM_CLASS        __declspec(dllimport)
-#  endif
+
+// Use automatic linking when building with Visual C++ and when requested to
+// do so. Define either CPPDOM_AUTO_LINK or CPPDOM_DYN_LINK to enable automatic
+// linking. The latter specifies that the dynamic library is the one to link
+// against automatically. If CPPDOM_DYN_LINK is not defined when using
+// automatic linking, then the static library is used.
+#     if defined(_MSC_VER) && \
+            (defined(CPPDOM_AUTO_LINK) || defined(CPPDOM_DYN_LINK))
+#        if defined(_DEBUG)
+#           if defined(CPPDOM_DYN_LINK)
+#              pragma comment(lib, "cppdom_d.lib")
+#           else
+#              pragma comment(lib, "cppdom_d_s.lib")
+#           endif
+#        else  /* ! defined(_DEBUG) */
+#           if defined(CPPDOM_DYN_LINK)
+#              pragma comment(lib, "cppdom.lib")
+#           else
+#              pragma comment(lib, "cppdom_s.lib")
+#           endif
+#        endif /* defined(_DEBUG) */
+#     endif /* defined(_MSC_VER) && (defined(CPPDOM_AUTO_LINK) || defined(CPPDOM_DYN_LINK)) */
+#  endif /* defined(CPPDOM_EXPORTS) */
 
 #else
 #  define CPPDOM_EXPORT(ret) ret
