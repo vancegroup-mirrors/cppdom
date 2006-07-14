@@ -9,10 +9,17 @@ Dependencies
 
 Building on Windows
 ===================
-Open the file vc7\cppdom.sln using Visual Studio (version 2002 or newer
-is required).  Build the desired targets (usually "Debug - DLL" and
-"Release - DLL").  The compiled files will be in the 'lib' subdirectory of
-the source tree.
+To build CppDOM for 32-bit Windows using either Visual Studio .NET 2002 or
+Visual Studio .NET 2003, open the file vc7\cppdom.sln using Visual Studio.
+Build the desired targets (usually "Debug - DLL" and "Release - DLL"). The
+compiled files will be in the 'lib' subdirectory of the source tree.
+
+Using Visual Studio 2005, either 32-bit Windows or 64-bit Windows (x64 only)
+can be targetd. Open the file vc8\cppdom.sln using Visual Studio 2005, and
+build the desired targets (usually "Debug - DLL" and "Release - DLL") for the
+desired platforms ("Win32" and/or "x64"). The compiled files will be in the
+'lib' subdirectory of the source tree in one or both of the directories
+'win32' (for the 32-bit build) and 'x64' (for the 64-bit build).
 
 Installation must be performed by hand.  The following commands show a
 possible way to install everything correctly:
@@ -25,8 +32,26 @@ possible way to install everything correctly:
    copy lib\*.lib C:\cppdom\lib
    copy lib\*.dll C:\cppdom\lib
 
+If the build was performed using Visual Studio 2005, then the last two
+commands above would instead be the following (32-bit only):
+
+   copy lib\win32\*.lib C:\cppdom\lib
+   copy lib\win32\*.dll C:\cppdom\lib
+
+or (64-bit only):
+
+   copy lib\x64\*.lib C:\cppdom\lib
+   copy lib\x64\*.dll C:\cppdom\lib
+
+or (32-bit and 64-bit):
+
+   copy lib\win32\*.lib C:\cppdom\lib\win32
+   copy lib\win32\*.dll C:\cppdom\lib\win32
+   copy lib\x64\*.lib C:\cppdom\lib\x64
+   copy lib\x64\*.dll C:\cppdom\lib\x64
+
 NOTE: Compiling the OPTIONAL Spirit-based parser (see cppdom\SpiritParser.cpp)
-is not currently supported by the Visual Studio solution vc7\cppdom.sln.
+is not currently supported by either of the Visual Studio solutions.
 
 Building
 ========
