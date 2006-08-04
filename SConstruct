@@ -249,7 +249,8 @@ SConsignFile()
 
 # Figure out what vesion of CppDom we're using
 CPPDOM_VERSION = GetCppDomVersion()
-print 'Building CppDom Version: %i.%i.%i' % CPPDOM_VERSION
+cppdom_version_str = '%i.%i.%i' % CPPDOM_VERSION
+print 'Building CppDom Version: %s' % cppdom_version_str
 
 # Get command-line arguments
 optimize = ARGUMENTS.get('optimize', 'no')
@@ -378,6 +379,7 @@ if not SConsAddons.Util.hasHelpFlag():
    inst_paths = {}
    inst_paths['base'] = os.path.abspath(baseEnv['prefix'])
    inst_paths['lib'] = pj(inst_paths['base'], baseEnv['libdir'])
+   inst_paths['pkgconfig'] = pj(inst_paths['lib'], 'pkgconfig')
    inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
    inst_paths['include'] = pj(inst_paths['base'], 'include')   
    print "using prefix: ", inst_paths['base']   
@@ -393,6 +395,15 @@ if not SConsAddons.Util.hasHelpFlag():
    for d in dirs:
       SConscript(pj(d,'SConscript'), build_dir=pj(buildDir, d), duplicate=0)
 
+   # Build up the provides vars for the .fpc files
+   provides = "cppdom"
+
+   arch = "noarch"
+   if "ia32" == cpu_arch:
+      arch = "i386"
+   else:
+      arch = cpu_arch
+
    # Setup tar of source files
    tar_sources = Split("""
 	 	  AUTHORS
@@ -400,6 +411,8 @@ if not SConsAddons.Util.hasHelpFlag():
 		  COPYING
 		  README
 		  cppdom-config.in
+		  cppdom.fpc.in
+		  cppdom.pc.in
 		  SConstruct
 		  doc/cppdom.doxy
 		  doc/dox/examples_index.dox
@@ -414,6 +427,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    # Build up substitution map
    submap = {
+      '@provides@'                  : provides,
       '@prefix@'                    : inst_paths['base'],
       '@exec_prefix@'               : '${prefix}',
       '@cppdom_cxxflags@'           : '',
@@ -426,12 +440,24 @@ if not SConsAddons.Util.hasHelpFlag():
       '@VERSION_MAJOR@'             : str(CPPDOM_VERSION[0]),
       '@VERSION_MINOR@'             : str(CPPDOM_VERSION[1]),
       '@VERSION_PATCH@'             : str(CPPDOM_VERSION[2]),
+      '@arch@'                      : arch,
+      '@version@'                   : cppdom_version_str,
    }
 
    # Setup the builder for cppdom-config
    if GetPlatform() != 'win32':
       env = baseEnv.Copy(BUILDERS = builders)
-      cppdom_config  = env.ConfigBuilder('cppdom-config', 'cppdom-config.in', submap=submap )
+
+      name_parts = ['cppdom', cppdom_version_str, arch]
+      pc_filename = "-".join(name_parts) + ".fpc"
+      cppdom_pc = env.ConfigBuilder(pj(inst_paths['pkgconfig'], pc_filename), 
+                                    'cppdom.fpc.in', submap = submap)
+
+      env.AddPostAction(cppdom_pc, Chmod('$TARGET', 0644))
+      env.Depends(cppdom_pc, 'cppdom/version.h')
+
+      cppdom_config = env.ConfigBuilder('cppdom-config', 'cppdom-config.in',
+                                        submap = submap)
 
       env.Depends('cppdom-config', 'cppdom/version.h')
       env.Install(inst_paths['bin'], cppdom_config)

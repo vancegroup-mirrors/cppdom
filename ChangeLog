@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+2006-08-04 patrickh     Generate a flagpoll .fpc file for querying CppDOM
+                        package information.
+
 [Version 0.6.5 released - 8.4.2006]============================================
 2006-07-14 patrickh     Added support for Windows XP x64 Edition.
 2006-07-12 patrickh     Implemented automatic linking on Windows.
