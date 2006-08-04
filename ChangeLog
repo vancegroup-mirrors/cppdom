@@ -1,6 +1,6 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
-[Version 0.6.5 released - 7.14.2006]===========================================
+[Version 0.6.5 released - 8.4.2006]============================================
 2006-07-14 patrickh     Added support for Windows XP x64 Edition.
 2006-07-12 patrickh     Implemented automatic linking on Windows.
 
