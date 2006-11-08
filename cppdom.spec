@@ -1,7 +1,7 @@
 # Spec file for cppdom.
 %define name    cppdom
 %define version 0.6.5
-%define release 1
+%define release 1%{?dist}
 
 Name: %{name}
 Summary: A C++ based XML loader and writer with an internal DOM representation.
