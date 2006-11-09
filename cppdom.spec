@@ -1,6 +1,6 @@
 # Spec file for cppdom.
 %define name    cppdom
-%define version 0.6.5
+%define version 0.6.6
 %define release 1%{?dist}
 
 Name: %{name}

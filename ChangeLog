@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 0.6.6 released - 11.9.2006]===========================================
+2006-11-09 patrickh     Fixed bad paths in cppdom-config and the .fpc file
+                        when they are intalled via the cppdom-devel RPM.
 2006-08-04 patrickh     Generate a flagpoll .fpc file for querying CppDOM
                         package information.
 
