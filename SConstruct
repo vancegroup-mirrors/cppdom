@@ -379,7 +379,7 @@ if not SConsAddons.Util.hasHelpFlag():
    inst_paths = {}
    inst_paths['base'] = os.path.abspath(baseEnv['prefix'])
    inst_paths['lib'] = pj(inst_paths['base'], baseEnv['libdir'])
-   inst_paths['pkgconfig'] = pj(inst_paths['lib'], 'pkgconfig')
+   inst_paths['flagpoll'] = pj(inst_paths['lib'], 'flagpoll')
    inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
    inst_paths['include'] = pj(inst_paths['base'], 'include')   
    print "using prefix: ", inst_paths['base']   
@@ -450,7 +450,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
       name_parts = ['cppdom', cppdom_version_str, arch]
       pc_filename = "-".join(name_parts) + ".fpc"
-      cppdom_pc = env.ConfigBuilder(pj(inst_paths['pkgconfig'], pc_filename), 
+      cppdom_pc = env.ConfigBuilder(pj(inst_paths['flagpoll'], pc_filename), 
                                     'cppdom.fpc.in', submap = submap)
 
       env.AddPostAction(cppdom_pc, Chmod('$TARGET', 0644))
