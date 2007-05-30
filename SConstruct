@@ -192,7 +192,13 @@ def BuildSunEnvironment():
    ret_env = Environment( ENV = os.environ )
    
    # Override the tool chains used
-   for t in ['gcc', 'gnulink', 'g++']:
+   cc_path = WhereIs('CC')
+   if cc_path is None:
+      tools = ['gcc', 'gnulink', 'g++']
+   else:
+      tools = ['suncc', 'sunlink']
+
+   for t in tools:
       Tool(t)(ret_env)    
    
    ret_env['CXXFLAGS'] = CXXFLAGS;
@@ -259,7 +265,7 @@ profile = ARGUMENTS.get('profile', 'no')
 platform = distutils.util.get_platform()
 
 # IA32
-if re.search(r'i.86', platform):
+if re.search(r'i.?86', platform):
    cpu_arch_default = 'ia32'
 # x86_64 (aka, x64, EM64T)
 elif re.search(r'x86_64', platform):
