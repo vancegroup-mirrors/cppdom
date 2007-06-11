@@ -1,0 +1,45 @@
+see COPYING for the license (LGPL)
+
+Dependencies
+============
+- Reasonably compliant C++ compiler (gcc 3.x, vc 7.1, etc)
+- Boost library: See www.boost.org for details and downloads
+- CppUnit (optional for test suite): See cppunit.sf.net
+- (optional) SConsAddons - Addon library for the build system.  https://realityforge.vrsource.org/SconsAddons
+
+Building
+========
+CppDom uses the scons build system.  You can download scons from www.scons.org.
+
+We also use the SconsAddons library (see above).  It is included in the source
+tree or you can add its source directory in your PYTHONPATH to build.
+
+ex: https://realityforge.vrsource.org/svn/scons-addons/trunk/scons-addons
+
+PYTHONPATH=/home/username/scons-addons/src
+
+NOTE: In the future we hope to use third party branches or svn:externals to 
+remove the need to download this separately.
+
+Once you have both of these, the follow steps should be all you need.
+
+Please see 'scons --help' for a list of options for specifying where the
+dependencies are located.
+
+type 'scons' to build cppdom shared lib.
+type 'scons install' to install on the system
+type 'scons install prefix=$HOME/software' to install in your account
+
+Universal Binaries
+==================
+
+To build the CppDOM libraries as univeral binaries (Mac OS X only), use the
+following command:
+
+   scons darwin_universal=yes var_arch=universal var_type=optimized
+
+This will default to using the Mac OS X 10.4 universal SDK in
+/Developer/SDKs/MacOSX10.4.u.sdk. To override this, add the following
+option to the above command line:
+
+   darwin_sdk=/path/to/platform/sdk
