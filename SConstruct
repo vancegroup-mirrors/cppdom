@@ -27,7 +27,7 @@ pj = os.path.join
 #------------------------------------------------------------------------------
 # Main build setup
 #------------------------------------------------------------------------------
-EnsureSConsVersion(0,96)
+EnsureSConsVersion(2,0)
 #SourceSignatures('MD5')
 #SourceSignatures('timestamp')
 SConsignFile('.sconsign.'+GetPlatform())
@@ -43,18 +43,19 @@ unspecified_prefix = "use-instlinks"
 buildDir = "build." + platform      
 option_filename = "config.cache." + platform
 
+temp_env = dict(ENV = os.environ)
 if GetPlatform() == "win32":
-   if ARGUMENTS.has_key("MSVS_VERSION"):
-      common_env = Environment(MSVS_VERSION = ARGUMENTS["MSVS_VERSION"])
-   else:
-      common_env = Environment()
-   common_env["MSVS"] = {"VERSION" : common_env["MSVS_VERSION"]}
-   print "Using MSVS version", common_env["MSVS"]["VERSION"]
-else:
-   common_env = Environment(ENV = os.environ)
-SConsAddons.Builders.registerSubstBuilder(common_env)
-common_env["CONFIGUREDIR"] = '.sconf_temp_'+platform
-common_env["CONFIGURELOG"] = 'sconf.log_'+platform
+   if ARGUMENTS.has_key("MSVC_VERSION"):
+      temp_env["MSVC_VERSION"] = ARGUMENTS["MSVC_VERSION"]
+
+   if ARGUMENTS.has_key("MSVS_ARCH"):
+      temp_env["MSVS_ARCH"] = ARGUMENTS["MSVS_ARCH"]
+      temp_env["TARGET_ARCH"] = ARGUMENTS["MSVS_ARCH"]
+
+   temp_env["MSVS"] = {"VERSION" : temp_env["MSVC_VERSION"]}
+
+temp_env["CONFIGUREDIR"] = '.sconf_temp_'+platform
+temp_env["CONFIGURELOG"] = 'sconf.log_'+platform
 
 # Create variant helper and builder
 variant_helper = sca_variants.VariantsHelper()
@@ -71,8 +72,12 @@ boost_options = SConsAddons.Options.Boost.Boost("boost","1.31.0",required=0)
 opts.AddOption(sca_opts.SeparatorOption("\nPackage Options"))
 opts.AddOption( cppunit_options )
 opts.AddOption( boost_options )
+
 base_bldr.addOptions(opts)
 variant_helper.addOptions(opts)
+common_env = base_bldr.buildEnvironment(None,None,**temp_env)
+SConsAddons.Builders.registerSubstBuilder(common_env)
+
 opts.AddOption(sca_opts.SeparatorOption("\nOther settings"))
 opts.Add('prefix', 'Installation prefix', unspecified_prefix)
 opts.Add('build_test', 'Build the test programs', 'yes')
@@ -108,7 +113,7 @@ if not SConsAddons.Util.hasHelpFlag():
    base_bldr.readOptions(common_env)
    base_bldr.enableWarnings()   
   
- # Apply any common package options
+   # Apply any common package options
    # Update environment for boost options
    if boost_options.isAvailable():
       boost_options.apply(common_env)    
@@ -162,8 +167,8 @@ if not SConsAddons.Util.hasHelpFlag():
       sub_dirs.append('test')
 
    # ---- FOR EACH VARIANT ----- #   
-   for combo in variant_helper.iterate(locals(), base_bldr, common_env):            
-      #baseEnv = env_bldr.applyToEnvironment(common_env.Copy(), variant=combo,options=opts)      
+   for combo in variant_helper.iterate(locals(), base_bldr, common_env):
+      #build_env = base_bldr.applyToEnvironment(common_env.Copy(), variant=combo,options=opts)  
       print "   Processing combo: ", ", ".join(['%s:%s'%(i[0],i[1]) for i in combo.iteritems()])
 
       inst_paths = copy.copy(base_inst_paths)
@@ -195,7 +200,7 @@ if not SConsAddons.Util.hasHelpFlag():
       # Process subdirectories
       full_build_dir = pj(buildDir,combo_dir)      
       for d in sub_dirs:
-         SConscript(pj(d,'SConscript'), build_dir=pj(full_build_dir, d), duplicate=0)
+         SConscript(pj(d,'SConscript'), variant_dir=pj(full_build_dir, d), duplicate=0)
 
       # Build up the provides vars for the .fpc files
       inst_paths['flagpoll'] = pj(inst_paths['lib'],'flagpoll')

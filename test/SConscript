@@ -4,7 +4,7 @@ Import('*')
 import os
 pj = os.path.join
 
-test_env = build_env.Copy()
+test_env = build_env.Clone()
 test_env.Append(CPPPATH = [inst_paths['include'], '#test'],
                 LIBPATH = [inst_paths['lib'],],
                 LIBS = [cppdom_app_libname])

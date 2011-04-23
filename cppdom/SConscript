@@ -27,7 +27,7 @@ sources = Split("""
 if boost_options.isAvailable():
    sources.append("SpiritParser.cpp")
 
-cppdom_lib_env = build_env.Copy()
+cppdom_lib_env = build_env.Clone()
 cppdom_lib_env.Append(CPPPATH = [inst_paths['include'],])
 
 if "debug" in combo["type"] or "debugrt" in combo["type"]:
@@ -40,10 +40,10 @@ if "shared" in combo["libtype"]:
    # NOTE: The [:3] bit used before passing the MSVS_VERSION value to float()
    # is to handle the case of Visual C++ Express Edition which appends "Exp"
    # to the version number.
-   if cppdom_lib_env.has_key('MSVS_VERSION') and float(cppdom_lib_env['MSVS_VERSION'][:3]) >= 8.0:
+   if cppdom_lib_env.has_key('MSVC_VERSION') and float(cppdom_lib_env['MSVC_VERSION'][:3]) >= 8.0:
       shlinkcom = [shlinkcom,
                    'mt.exe -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
-   cppdom_shared_lib_env = cppdom_lib_env.Copy()
+   cppdom_shared_lib_env = cppdom_lib_env.Clone()
    cppdom_shared_lib_env.AppendUnique(CPPDEFINES = ["CPPDOM_EXPORTS"])
    if GetPlatform() == 'darwin':
       # TODO: The install name should probably include the installation
@@ -60,7 +60,7 @@ if "shared" in combo["libtype"]:
    cppdom_shared_lib_env.Install(inst_paths['lib'], cppdom_lib)
 
 if "static" in combo["libtype"]:
-   cppdom_static_lib_env = cppdom_lib_env.Copy()
+   cppdom_static_lib_env = cppdom_lib_env.Clone()
    cppdom_static_lib = cppdom_static_lib_env.StaticLibrary(cppdom_static_libname, sources)
    cppdom_static_lib_env.Install(inst_paths['lib'], cppdom_static_lib)
 
