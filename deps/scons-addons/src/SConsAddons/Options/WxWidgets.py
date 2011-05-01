@@ -53,6 +53,7 @@ class WxWidgets(SConsAddons.Options.PackageOption):
       self.available = False
       self.useCppPath = useCppPath
       self.found_cxxflags = None
+      self.found_frameworks = None
       SConsAddons.Options.PackageOption.__init__(self, name, self.baseDirKey, help_text)
       
       # configurable options
@@ -86,6 +87,9 @@ class WxWidgets(SConsAddons.Options.PackageOption):
       if self.baseDir != None:
          assert self.baseDir
          assert self.wxwidgetsconfig_cmd
+         return
+      else:
+         self.checkRequired("wxwidgets base dir not found");
          return
       
       # Find cppunit-config and call it to get the other arguments
@@ -141,6 +145,7 @@ class WxWidgets(SConsAddons.Options.PackageOption):
       self.found_incs = cfg_cmd_parser.findIncludes(" --cxxflags")
       self.found_cxxflags = cfg_cmd_parser.findCXXFlags()
       self.found_libs = cfg_cmd_parser.findLibs()
+      self.found_frameworks = cfg_cmd_parser.findFrameworks()
       self.found_lib_paths = cfg_cmd_parser.findLibPaths()
 
       # Create list of flags that may be needed later
@@ -186,6 +191,9 @@ class WxWidgets(SConsAddons.Options.PackageOption):
 
       if self.found_libs:
          env.Append(LIBS = self.found_libs)
+
+      if self.found_frameworks:
+         env.Append(FRAMEWORKS = self.found_frameworks)
 
       if self.found_cxxflags:
          env.Append(CPPDEFINES = self.found_cxxflags)
