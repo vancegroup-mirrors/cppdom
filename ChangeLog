@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+[Version 1.2.0 released - 5.1.2011]============================================
+
 2011-04-23 patrickh     SCons 2.0 is now the minimum required version.
                         Submitted by Doug McCorkle.
 2010-04-14 patrickh     Preserve newlines in CDATA.
