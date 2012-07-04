@@ -53,6 +53,8 @@
 
 #include <cstring>
 
+#include <string.h>
+
 std::string getHostname(void);
 
 int main(int argc, char** argv)
