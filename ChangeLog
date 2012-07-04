@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ---------- -----------  -------------------------------------------------------
+2012-07-04 patrickh     Add CMake build.
+                        Developed by Ryan Pavlik.
+
 [Version 1.2.0 released - 5.1.2011]============================================
 
 2011-04-23 patrickh     SCons 2.0 is now the minimum required version.
