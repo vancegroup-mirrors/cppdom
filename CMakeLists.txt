@@ -3,7 +3,7 @@
 # http://academic.cleardefinition.com/
 # Iowa State University HCI Graduate Program/VRAC
 
-cmake_minimum_required(VERSION 2.6.2)
+cmake_minimum_required(VERSION 2.8.8)
 
 # Set package properties
 project(cppdom)
@@ -64,7 +64,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cppdom.fpc"
 # Perform build configuration of dependencies
 ###
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-include(UseBackportedModules)
 include(CTest)
 
 find_package(Boost)
