@@ -2,6 +2,10 @@
 # 2009-2011 Ryan Pavlik <rpavlik@iastate.edu>
 # http://academic.cleardefinition.com/
 # Iowa State University HCI Graduate Program/VRAC
+set(CPPDOM_VERSION_MAJOR "${CPACK_PACKAGE_VERSION_MAJOR}")
+set(CPPDOM_VERSION_MINOR "${CPACK_PACKAGE_VERSION_MINOR}")
+set(CPPDOM_VERSION_PATCH "${CPACK_PACKAGE_VERSION_PATCH}")
+configure_file(version.h.in "${CMAKE_CURRENT_SOURCE_DIR}/version.h" @ONLY)
 
 set(API
 	config.h
