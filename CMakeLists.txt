@@ -64,6 +64,10 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cppdom.fpc"
 	DESTINATION ${FLAGPOLL_INFO_DIR}
 	COMPONENT Development)
 
+install(FILES cppdom-config
+	DESTINATION ${BIN_DIR}
+	COMPONENT Development)
+
 ###
 # Perform build configuration of dependencies
 ###
