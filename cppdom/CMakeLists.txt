@@ -12,7 +12,6 @@ set(API
 	cppdom.h
 	predicates.h
 	shared_ptr.h
-	SpiritParser.h
 	xmlparser.h
 	xmltokenizer.h
 	version.h)
@@ -27,6 +26,7 @@ set(SOURCES
 if(BOOST_FOUND)
 	include_directories(${Boost_INCLUDE_DIRS})
 	list(APPEND SOURCES SpiritParser.cpp)
+	list(APPEND API SpiritParser.h)
 endif()
 
 add_definitions(-DCPPDOM_EXPORTS)
