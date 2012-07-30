@@ -14,19 +14,28 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_PACKAGE_VERSION
 	"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(VERSION_UNDERSCORES "${CPACK_PACKAGE_VERSION_MAJOR}_${CPACK_PACKAGE_VERSION_MINOR}_${CPACK_PACKAGE_VERSION_PATCH}")
+
 ###
 # Set up options
 ###
 
+# TODO this is not ideal/complete
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+	set(arch "x86_64")
+	set(ARCH_DIR lib64)
+else()
+	set(arch "x86")
+	set(ARCH_DIR lib)
+endif()
+
 # Define directories
 set(BIN_DIR bin)
-set(ARCH_DIR lib)
 set(FLAGPOLL_INFO_DIR share/flagpoll)
 if(WIN32)
 	set(LIB_DIR bin)
 	set(INCLUDE_DIR include)
 else()
-	set(LIB_DIR lib)
+	set(LIB_DIR ${ARCH_DIR})
 	set(INCLUDE_DIR include/cppdom-${CPACK_PACKAGE_VERSION})
 endif()
 
@@ -37,12 +46,7 @@ set(prefix "\${fp_file_cwd}/../..")
 set(exec_prefix "\${prefix}")
 set(includedir "\${fp_file_cwd}/../../${INCLUDE_DIR}")
 set(libdir "\${fp_file_cwd}/../../${LIB_DIR}")
-# TODO this is not ideal/complete
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(arch "x86_64")
-else()
-	set(arch "x86")
-endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX)
 	set(cppdom_cxxflags "-Wno-deprecated")
 	set(include_path_flag "-I")
@@ -58,6 +62,10 @@ endif()
 configure_file(cppdom.fpc.in "${CMAKE_CURRENT_BINARY_DIR}/cppdom.fpc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cppdom.fpc"
 	DESTINATION ${FLAGPOLL_INFO_DIR}
+	COMPONENT Development)
+
+install(FILES cppdom-config
+	DESTINATION ${BIN_DIR}
 	COMPONENT Development)
 
 ###
