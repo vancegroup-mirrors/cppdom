@@ -12,7 +12,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "3")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_PACKAGE_VERSION
-	"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+    "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 set(VERSION_UNDERSCORES "${CPACK_PACKAGE_VERSION_MAJOR}_${CPACK_PACKAGE_VERSION_MINOR}_${CPACK_PACKAGE_VERSION_PATCH}")
 
 ###
@@ -21,22 +21,22 @@ set(VERSION_UNDERSCORES "${CPACK_PACKAGE_VERSION_MAJOR}_${CPACK_PACKAGE_VERSION_
 
 # TODO this is not ideal/complete
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(arch "x86_64")
-	set(ARCH_DIR lib64)
+    set(arch "x86_64")
+    set(ARCH_DIR lib64)
 else()
-	set(arch "x86")
-	set(ARCH_DIR lib)
+    set(arch "x86")
+    set(ARCH_DIR lib)
 endif()
 
 # Define directories
 set(BIN_DIR bin)
 set(FLAGPOLL_INFO_DIR share/flagpoll)
 if(WIN32)
-	set(LIB_DIR bin)
-	set(INCLUDE_DIR include)
+    set(LIB_DIR bin)
+    set(INCLUDE_DIR include)
 else()
-	set(LIB_DIR ${ARCH_DIR})
-	set(INCLUDE_DIR include/cppdom-${CPACK_PACKAGE_VERSION})
+    set(LIB_DIR ${ARCH_DIR})
+    set(INCLUDE_DIR include/cppdom-${CPACK_PACKAGE_VERSION})
 endif()
 
 # Create flagpoll file
@@ -48,25 +48,25 @@ set(includedir "\${fp_file_cwd}/../../${INCLUDE_DIR}")
 set(libdir "\${fp_file_cwd}/../../${LIB_DIR}")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-	set(cppdom_cxxflags "-Wno-deprecated")
-	set(include_path_flag "-I")
-	set(cppdom_libs "-lcppdom-${VERSION_UNDERSCORES}")
-	set(lib_path_flag "-L")
+    set(cppdom_cxxflags "-Wno-deprecated")
+    set(include_path_flag "-I")
+    set(cppdom_libs "-lcppdom-${VERSION_UNDERSCORES}")
+    set(lib_path_flag "-L")
 elseif(MSVC)
-	set(include_path_flag "/I")
-	set(lib_path_flag "/L")
+    set(include_path_flag "/I")
+    set(lib_path_flag "/L")
 else()
-	message(FATAL_ERROR "Compiler not recognized - can't generate values for Flagpoll file")
+    message(FATAL_ERROR "Compiler not recognized - can't generate values for Flagpoll file")
 endif()
 
 configure_file(cppdom.fpc.in "${CMAKE_CURRENT_BINARY_DIR}/cppdom.fpc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cppdom.fpc"
-	DESTINATION ${FLAGPOLL_INFO_DIR}
-	COMPONENT Development)
+        DESTINATION ${FLAGPOLL_INFO_DIR}
+        COMPONENT Development)
 
 install(FILES cppdom-config
-	DESTINATION ${BIN_DIR}
-	COMPONENT Development)
+        DESTINATION ${BIN_DIR}
+        COMPONENT Development)
 
 ###
 # Perform build configuration of dependencies
@@ -91,12 +91,12 @@ add_subdirectory(test)
 
 # Choose desired package generators
 if(APPLE)
-	set(CPACK_GENERATOR DragNDrop)
-	set(CPACK_SOURCE_GENERATOR ZIP)
+    set(CPACK_GENERATOR DragNDrop)
+    set(CPACK_SOURCE_GENERATOR ZIP)
 elseif(WIN32)
-	set(CPACK_SOURCE_GENERATOR ZIP)
+    set(CPACK_SOURCE_GENERATOR ZIP)
 else()
-	set(CPACK_SOURCE_GENERATOR TARGZ)
+    set(CPACK_SOURCE_GENERATOR TARGZ)
 endif()
 
 # Include the packaging system now that we have it all set up
