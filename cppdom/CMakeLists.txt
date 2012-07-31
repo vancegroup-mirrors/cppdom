@@ -23,7 +23,7 @@ set(SOURCES
     xmltokenizer.cpp
     ext/OptionRepository.cpp)
 
-if(BOOST_FOUND)
+if(BOOST_FOUND AND BUILD_SPIRIT_PARSER)
     include_directories(${Boost_INCLUDE_DIRS})
     list(APPEND SOURCES SpiritParser.cpp)
     list(APPEND API SpiritParser.h)
@@ -38,13 +38,17 @@ set(CMAKE_DEBUG_POSTFIX  "_d-${VERSION_UNDERSCORES}")
 
 add_library(cppdom SHARED ${API} ${EXT_API} ${SOURCES})
 
-set_target_properties(cppdom PROPERTIES
-                      PUBLIC_HEADER "${API}"
+set_target_properties(cppdom PROPERTIES PUBLIC_HEADER "${API}"
                       COMPILE_DEFINITIONS_DEBUG "CPPDOM_DEBUG")
+set_target_properties( cppdom PROPERTIES VERSION ${CPACK_PACKAGE_VERSION} )
+set_target_properties( cppdom PROPERTIES SOVERSION ${CPACK_PACKAGE_VERSION} )
+set_target_properties( cppdom PROPERTIES PROJECT_LABEL "Lib cppdom" )
+
 install(TARGETS cppdom
+        EXPORT cppdom-targets
         RUNTIME DESTINATION ${BIN_DIR} COMPONENT Runtime
-        LIBRARY DESTINATION    ${LIB_DIR} COMPONENT Runtime
-        ARCHIVE DESTINATION    ${ARCH_DIR} COMPONENT Development
+        LIBRARY DESTINATION ${LIB_DIR} COMPONENT Runtime
+        ARCHIVE DESTINATION ${ARCH_DIR} COMPONENT Development
         PUBLIC_HEADER DESTINATION ${INCLUDE_DIR}/cppdom COMPONENT Development)
 install(FILES ${EXT_API}
         DESTINATION ${INCLUDE_DIR}/cppdom/ext

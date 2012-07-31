@@ -30,7 +30,7 @@ endif()
 
 # Define directories
 set(BIN_DIR bin)
-set(FLAGPOLL_INFO_DIR share/flagpoll)
+
 if(WIN32)
     set(LIB_DIR bin)
     set(INCLUDE_DIR include)
@@ -38,6 +38,8 @@ else()
     set(LIB_DIR ${ARCH_DIR})
     set(INCLUDE_DIR include/cppdom-${CPACK_PACKAGE_VERSION})
 endif()
+
+set(FLAGPOLL_INFO_DIR ${LIB_DIR}/flagpoll)
 
 # Create flagpoll file
 set(provides "cppdom")
@@ -72,9 +74,13 @@ install(FILES cppdom-config
 # Perform build configuration of dependencies
 ###
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 include(CTest)
 
-find_package(Boost)
+option( BUILD_SPIRIT_PARSER "Set to ON to build the SpiritParser based on the Boost Spirit library." OFF )
+if(BUILD_SPIRIT_PARSER)
+    find_package(Boost)
+endif(BUILD_SPIRIT_PARSER)
 
 ###
 # Build the project
@@ -105,3 +111,43 @@ include(CPack)
 ###
 # End Packaging
 ###
+
+# Install the CMake find script for cppdom
+install( FILES "cmake/Findcppdom.cmake"
+         DESTINATION "share/${CMAKE_PROJECT_NAME}/extra"
+         COMPONENT Development )
+
+#
+# Create and install all of the auto find tools
+# =============================================
+
+# Add all targets to the build-tree export set
+export(TARGETS cppdom 
+    FILE "${PROJECT_BINARY_DIR}/${LIB_DIR}/cppdomLibraryDepends.cmake")
+
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+export(PACKAGE cppdom)
+
+# Create a cppdomBuildTreeSettings.cmake file for the use from the build tree
+configure_file(cppdomBuildTreeSettings.cmake.in
+    "${PROJECT_BINARY_DIR}/${LIB_DIR}/cppdomBuildTreeSettings.cmake" @ONLY)
+
+configure_file(cppdomConfigVersion.cmake.in
+    "${PROJECT_BINARY_DIR}/${LIB_DIR}/cppdomConfigVersion.cmake" @ONLY)
+configure_file(Usecppdom.cmake.in
+    "${PROJECT_BINARY_DIR}/${LIB_DIR}/Usecppdom.cmake" @ONLY)
+
+# Install the export set for use with the install-tree
+install(EXPORT cppdom-targets DESTINATION ${LIB_DIR})
+
+include( CMakePackageConfigHelpers )
+configure_package_config_file( 
+    cppdomConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/cppdomConfig.cmake
+    INSTALL_DESTINATION ${LIB_DIR}
+    PATH_VARS INCLUDE_DIR )
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/cppdomConfig.cmake 
+              ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/cppdomConfigVersion.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/Usecppdom.cmake
+        DESTINATION ${LIB_DIR} )
