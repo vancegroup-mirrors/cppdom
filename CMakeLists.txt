@@ -49,7 +49,7 @@ set(exec_prefix "\${prefix}")
 set(includedir "\${fp_file_cwd}/../../${INCLUDE_DIR}")
 set(libdir "\${fp_file_cwd}/../../${LIB_DIR}")
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_COMPILER_IS_GNUCXX OR ( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" ) )
     set(cppdom_cxxflags "-Wno-deprecated")
     set(include_path_flag "-I")
     set(cppdom_libs "-lcppdom-${VERSION_UNDERSCORES}")
