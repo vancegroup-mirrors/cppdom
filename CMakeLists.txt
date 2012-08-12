@@ -39,7 +39,7 @@ else()
     set(INCLUDE_DIR include/cppdom-${CPACK_PACKAGE_VERSION})
 endif()
 
-set(FLAGPOLL_INFO_DIR ${LIB_DIR}/flagpoll)
+set(FLAGPOLL_INFO_DIR ${ARCH_DIR}/flagpoll)
 
 # Create flagpoll file
 set(provides "cppdom")
@@ -47,7 +47,7 @@ set(version "${CPACK_PACKAGE_VERSION}")
 set(prefix "\${fp_file_cwd}/../..")
 set(exec_prefix "\${prefix}")
 set(includedir "\${fp_file_cwd}/../../${INCLUDE_DIR}")
-set(libdir "\${fp_file_cwd}/../../${LIB_DIR}")
+set(libdir "\${fp_file_cwd}/../../${ARCH_DIR}")
 
 if(CMAKE_COMPILER_IS_GNUCXX OR ( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" ) )
     set(cppdom_cxxflags "-Wno-deprecated")
@@ -123,7 +123,7 @@ install( FILES "cmake/Findcppdom.cmake"
 
 # Add all targets to the build-tree export set
 export(TARGETS cppdom 
-    FILE "${PROJECT_BINARY_DIR}/${LIB_DIR}/cppdomLibraryDepends.cmake")
+    FILE "${PROJECT_BINARY_DIR}/${ARCH_DIR}/cppdomLibraryDepends.cmake")
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
@@ -131,23 +131,23 @@ export(PACKAGE cppdom)
 
 # Create a cppdomBuildTreeSettings.cmake file for the use from the build tree
 configure_file(cppdomBuildTreeSettings.cmake.in
-    "${PROJECT_BINARY_DIR}/${LIB_DIR}/cppdomBuildTreeSettings.cmake" @ONLY)
+    "${PROJECT_BINARY_DIR}/${ARCH_DIR}/cppdomBuildTreeSettings.cmake" @ONLY)
 
 configure_file(cppdomConfigVersion.cmake.in
-    "${PROJECT_BINARY_DIR}/${LIB_DIR}/cppdomConfigVersion.cmake" @ONLY)
+    "${PROJECT_BINARY_DIR}/${ARCH_DIR}/cppdomConfigVersion.cmake" @ONLY)
 configure_file(Usecppdom.cmake.in
-    "${PROJECT_BINARY_DIR}/${LIB_DIR}/Usecppdom.cmake" @ONLY)
+    "${PROJECT_BINARY_DIR}/${ARCH_DIR}/Usecppdom.cmake" @ONLY)
 
 # Install the export set for use with the install-tree
-install(EXPORT cppdom-targets DESTINATION ${LIB_DIR})
+install(EXPORT cppdom-targets DESTINATION ${ARCH_DIR})
 
 include( CMakePackageConfigHelpers )
 configure_package_config_file( 
-    cppdomConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/cppdomConfig.cmake
-    INSTALL_DESTINATION ${LIB_DIR}
+    cppdomConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/${ARCH_DIR}/cppdomConfig.cmake
+    INSTALL_DESTINATION ${ARCH_DIR}
     PATH_VARS INCLUDE_DIR )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/cppdomConfig.cmake 
-              ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/cppdomConfigVersion.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/${LIB_DIR}/Usecppdom.cmake
-        DESTINATION ${LIB_DIR} )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${ARCH_DIR}/cppdomConfig.cmake 
+              ${CMAKE_CURRENT_BINARY_DIR}/${ARCH_DIR}/cppdomConfigVersion.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/${ARCH_DIR}/Usecppdom.cmake
+        DESTINATION ${ARCH_DIR} )
